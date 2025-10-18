@@ -1,0 +1,23 @@
+---
+draft: true
+title: "테스트 포스트"
+description: |
+  테스트로 description을 이렇게 적어봅니다.
+date: "2025-10-07"
+date-format: "iso"
+title-block-banner: "#007FFF"
+title-block-banner-color: "#FFFFFF"
+toc: true
+toc-location: left
+toc-depth: 3
+categories:
+  - 카테고리1
+  - 카테고리2
+image: colour-dot-matrix.png
+freeze: true
+---
+
+
+# 테스트
+
+테스트
