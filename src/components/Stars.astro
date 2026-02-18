@@ -1,0 +1,52 @@
+---
+/**
+ * Stars.astro
+ * CSS만으로 별이 박힌 밤하늘과 반짝이는 효과를 구현합니다.
+ */
+
+// 유성 설정: 개수와 랜덤 데이터 생성
+const METEOR_COUNT = 4;
+const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
+  top: (Math.random() * 40 - 10) + "%", // -10% ~ 30% 사이 (상단 위주)
+  left: (Math.random() * 100) + "%",     // 전체 가로폭
+  duration: (Math.random() * 2 + 2) + "s", // 2~4초 사이 비행 속도
+  delay: (Math.random() * 15 + 1) + "s",  // 1~16초 사이 랜덤 딜레이
+}));
+---
+<div class="stars-container fixed inset-0 -z-10 bg-black overflow-hidden pointer-events-none">
+  {/* 배경의 반짝이는 별들 */}
+  {Array.from({ length: 120 }).map((_, i) => {
+    const size = Math.random() * 1.5 + 0.5;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const duration = Math.random() * 3 + 2;
+    const delay = Math.random() * 5;
+    
+    return (
+      <div 
+        class="star" 
+        style={`
+          width: ${size}px; 
+          height: ${size}px; 
+          left: ${left}%; 
+          top: ${top}%; 
+          --twinkle-duration: ${duration}s;
+          animation-delay: ${delay}s;
+        `}
+      />
+    );
+  })}
+  
+  {/* 가속도가 붙은 랜덤 유성들 */}
+  {meteors.map((m) => (
+    <div 
+      class="meteor" 
+      style={`
+        top: ${m.top}; 
+        left: ${m.left}; 
+        animation-duration: ${m.duration};
+        animation-delay: ${m.delay};
+      `}
+    />
+  ))}
+</div>

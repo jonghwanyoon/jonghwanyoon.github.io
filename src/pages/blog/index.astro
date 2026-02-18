@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+
+const posts = (await getCollection('blog'))
+	.filter(post => !post.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+	<section class="space-y-12">
+		<h1 class="text-3xl font-bold tracking-tighter">Blog Archive</h1>
+		
+		<ul class="space-y-8">
+			{
+				posts.map((post) => (
+					<li class="group">
+						<a href={`/blog/${post.id}/`} class="flex flex-col md:flex-row md:items-baseline md:gap-4 no-underline">
+							<span class="text-sm text-white/40 font-mono shrink-0">
+								<FormattedDate date={post.data.pubDate} />
+							</span>
+							<div class="flex flex-col gap-1">
+								<h2 class="text-xl font-medium text-white/80 group-hover:text-white transition-colors underline-offset-4 group-hover:underline">
+									{post.data.title}
+								</h2>
+								<p class="text-sm text-white/40 line-clamp-1">
+									{post.data.description}
+								</p>
+							</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		
+		{posts.length === 0 && (
+			<p class="text-white/40 italic">아직 게시된 글이 없습니다. 곧 흥미로운 이야기로 찾아뵙겠습니다.</p>
+		)}
+	</section>
+</BaseLayout>

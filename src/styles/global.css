@@ -1,0 +1,120 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Atkinson", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-astro-black: #000000;
+  --color-astro-white: #ffffff;
+  --color-astro-gray: #71717a; /* zinc-400 */
+  
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  
+  @keyframes meteor-dynamic {
+    0% {
+      opacity: 1;
+      transform: rotate(215deg) translateX(0);
+      animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    }
+    90% {
+      opacity: 1;
+      transform: rotate(215deg) translateX(-500px);
+      animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(215deg) translateX(-540px);
+    }
+  }
+}
+
+@font-face {
+	font-family: "Atkinson";
+	src: url("/fonts/atkinson-regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Atkinson";
+	src: url("/fonts/atkinson-bold.woff") format("woff");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-black text-white/90 font-sans min-h-screen selection:bg-white selection:text-black;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-white font-bold tracking-tight;
+  }
+  
+  a {
+    @apply transition-colors duration-200 hover:text-white;
+  }
+}
+
+/* Customizing Prose for Cosmic Theme */
+@layer components {
+  .prose {
+    @apply max-w-none text-white/80;
+    --tw-prose-body: theme('colors.white / 80%');
+    --tw-prose-headings: theme('colors.white');
+    --tw-prose-links: theme('colors.white');
+    --tw-prose-bold: theme('colors.white');
+    --tw-prose-counters: theme('colors.white / 40%');
+    --tw-prose-bullets: theme('colors.white / 40%');
+    --tw-prose-quotes: theme('colors.white / 90%');
+    --tw-prose-quote-borders: theme('colors.white / 20%');
+    --tw-prose-captions: theme('colors.white / 50%');
+    --tw-prose-code: theme('colors.white');
+    --tw-prose-pre-code: theme('colors.white');
+    --tw-prose-pre-bg: theme('colors.white / 5%');
+    --tw-prose-th-borders: theme('colors.white / 20%');
+    --tw-prose-td-borders: theme('colors.white / 10%');
+  }
+
+  /* Ensure distinct sizes for headers in Markdown */
+  .prose h1 { @apply text-4xl mb-8; }
+  .prose h2 { @apply text-2xl mt-12 mb-4 pb-2 border-b border-white/10; }
+  .prose h3 { @apply text-xl mt-8 mb-4; }
+  .prose h4 { @apply text-lg mt-6 mb-2; }
+  
+  /* Table styling enhancements */
+  .prose table {
+    @apply border-collapse border border-white/10 my-8;
+  }
+  .prose th {
+    @apply bg-white/5 border border-white/10 px-4 py-2 text-left text-sm font-bold;
+  }
+  .prose td {
+    @apply border border-white/10 px-4 py-2 text-sm;
+  }
+
+  /* Lists and Blockquotes */
+  .prose ul { @apply list-disc list-outside ml-6 mb-6; }
+  .prose ol { @apply list-decimal list-outside ml-6 mb-6; }
+  .prose blockquote { @apply border-l-2 border-white/20 pl-6 italic my-8; }
+}
+
+/* Utilities for Space Effects */
+.star {
+  @apply absolute bg-white rounded-full;
+  animation: twinkle var(--twinkle-duration, 3s) infinite ease-in-out;
+}
+
+.meteor {
+  @apply absolute w-[2px] h-[2px] bg-gradient-to-r from-white to-transparent;
+  opacity: 0;
+  animation: meteor-dynamic 5s infinite;
+}

@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { Image } from 'astro:assets';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage, tags, category } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+	<article class="space-y-8">
+		{/* Hero Image */}
+		{heroImage && (
+			<div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
+				<Image width={1020} height={510} src={heroImage} alt={title} class="object-cover w-full h-full opacity-80" />
+			</div>
+		)}
+
+		{/* Header Meta */}
+		<header class="space-y-4">
+			<div class="flex items-center gap-2 text-xs font-mono text-white/40 uppercase tracking-widest">
+				{category && <span class="bg-white/10 px-2 py-0.5 rounded text-white/60">{category}</span>}
+				<FormattedDate date={pubDate} />
+				{updatedDate && (
+					<span class="italic text-white/20">
+						(Updated: <FormattedDate date={updatedDate} />)
+					</span>
+				)}
+			</div>
+			
+			<h1 class="text-4xl font-bold tracking-tight sm:text-5xl leading-[1.1]">
+				{title}
+			</h1>
+			
+			<p class="text-xl text-white/60 leading-relaxed italic">
+				{description}
+			</p>
+
+			{tags && tags.length > 0 && (
+				<div class="flex flex-wrap gap-2 pt-2">
+					{tags.map(tag => (
+						<span class="text-[10px] text-white/30 border border-white/10 px-1.5 py-0.5 rounded uppercase">
+							#{tag}
+						</span>
+					))}
+				</div>
+			)}
+		</header>
+
+		<hr class="border-white/10" />
+
+		{/* Post Content */}
+		<div class="prose prose-invert prose-zinc max-w-none">
+			<slot />
+		</div>
+	</article>
+</BaseLayout>

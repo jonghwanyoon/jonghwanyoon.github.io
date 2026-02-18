@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<section class="space-y-6">
+		<h1 class="text-4xl font-bold tracking-tighter sm:text-5xl">
+			Cosmic Minimalist Blog
+		</h1>
+		<p class="text-lg text-white/70 leading-relaxed max-w-2xl">
+			우주의 광활함과 미니멀리즘의 단순함을 담은 공간입니다. 
+			이곳에서는 Markdown을 통해 생각과 지식을 체계적으로 기록합니다.
+		</p>
+		
+		<div class="pt-8">
+			<h2 class="text-xl font-semibold mb-4 text-white">Latest Explorations</h2>
+			<p class="text-white/60 mb-6">
+				최신 글들을 확인하시려면 <a href="/blog" class="text-white underline underline-offset-4 hover:text-white/80">블로그 페이지</a>를 방문해 주세요.
+			</p>
+		</div>
+	</section>
+</BaseLayout>

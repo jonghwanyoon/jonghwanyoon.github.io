@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  # 'main' 브랜치에 푸시될 때마다 실행
+  push:
+    branches: [main]
+  # GitHub Actions 탭에서 수동으로 실행 가능하게 설정
+  workflow_dispatch:
+
+# GITHUB_TOKEN에 대한 권한 설정 (배포를 위해 필요)
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v4
+
+      - name: Install, bundle, and upload your site
+        uses: withastro/action@v3
+        # node_version: 20 # 필요한 경우 노드 버전 명시 가능
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
