@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  # 'main' 브랜치에 푸시될 때마다 실행
+  # 'master' 브랜치에 푸시될 때마다 실행
   push:
-    branches: [main]
+    branches: [master]
   # GitHub Actions 탭에서 수동으로 실행 가능하게 설정
   workflow_dispatch:
 
