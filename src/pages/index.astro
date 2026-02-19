@@ -1,23 +1,60 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const recentPosts = (await getCollection('blog'))
+	.filter(post => !post.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<section class="space-y-6">
-		<h1 class="text-4xl font-bold tracking-tighter sm:text-5xl">
-			Cosmic Minimalist Blog
-		</h1>
-		<p class="text-lg text-white/70 leading-relaxed max-w-2xl">
-			우주의 광활함과 미니멀리즘의 단순함을 담은 공간입니다. 
-			이곳에서는 Markdown을 통해 생각과 지식을 체계적으로 기록합니다.
-		</p>
-		
-		<div class="pt-8">
-			<h2 class="text-xl font-semibold mb-4 text-white">Latest Explorations</h2>
-			<p class="text-white/60 mb-6">
-				최신 글들을 확인하시려면 <a href="/blog" class="text-white underline underline-offset-4 hover:text-white/80">블로그 페이지</a>를 방문해 주세요.
+	<section class="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 py-12">
+		<div class="space-y-4 animate-fade-in-up">
+			<h1 class="text-6xl md:text-8xl font-black tracking-tighter text-white">
+				ORBITING <br/> THOUGHTS
+			</h1>
+			<p class="text-lg md:text-xl text-white/50 font-light tracking-widest uppercase">
+				Exploring the void between minimalism and complexity
 			</p>
+		</div>
+
+		<div class="w-24 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent animate-fade-in-up" style="animation-delay: 0.2s;"></div>
+
+		<div class="flex gap-4 animate-fade-in-up" style="animation-delay: 0.4s;">
+			<a href="/blog" class="px-8 py-3 bg-white text-black font-bold text-sm hover:bg-white/90 transition-all rounded-full">
+				BEGIN TRANSMISSION
+			</a>
+			<a href="/about" class="px-8 py-3 border border-white/20 text-white font-bold text-sm hover:bg-white/5 transition-all rounded-full">
+				IDENTIFY SIGNAL
+			</a>
+		</div>
+	</section>
+
+	<section class="pt-24 space-y-12 animate-fade-in-up" style="animation-delay: 0.6s;">
+		<div class="flex items-center gap-4">
+			<h2 class="text-xs font-black tracking-[0.2em] text-white/30 uppercase">Recent Signals</h2>
+			<div class="flex-1 h-px bg-white/5"></div>
+		</div>
+
+		<div class="grid gap-8">
+			{recentPosts.map(post => (
+				<a href={`/blog/${post.id}/`} class="group block space-y-2 no-underline">
+					<div class="flex justify-between items-baseline">
+						<h3 class="text-xl font-medium text-white/70 group-hover:text-white transition-colors">
+							{post.data.title}
+						</h3>
+						<span class="text-xs font-mono text-white/20">
+							<FormattedDate date={post.data.pubDate} />
+						</span>
+					</div>
+					<p class="text-sm text-white/40 line-clamp-1 group-hover:text-white/50 transition-colors">
+						{post.data.description}
+					</p>
+				</a>
+			))}
 		</div>
 	</section>
 </BaseLayout>
