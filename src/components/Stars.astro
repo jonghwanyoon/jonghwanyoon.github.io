@@ -13,7 +13,7 @@ const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
   delay: (Math.random() * 15 + 1) + "s",  // 1~16초 사이 랜덤 딜레이
 }));
 ---
-<div class="stars-container fixed inset-0 -z-10 bg-black overflow-hidden pointer-events-none">
+<div id="star-container" class="stars-container fixed inset-0 -z-10 bg-black overflow-hidden pointer-events-none transform-gpu">
   {/* 배경의 반짝이는 별들 */}
   {Array.from({ length: 120 }).map((_, i) => {
     const size = Math.random() * 1.5 + 0.5;
@@ -50,3 +50,42 @@ const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
     />
   ))}
 </div>
+
+<style>
+  /* 성능 최적화를 위한 힌트 제공 */
+  .stars-container {
+    will-change: transform;
+    height: 120vh; /* 패럴랙스 이동을 위한 여유 공간 */
+  }
+</style>
+
+<script>
+  // 클라이언트 사이드에서 패럴랙스 로직 실행
+  const container = document.getElementById('star-container');
+  
+  if (container) {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    
+    // 패럴랙스 강도 (0.1 ~ 0.2 권장)
+    const PARALLAX_SPEED = 0.15; 
+
+    const updateParallax = () => {
+      // 스크롤에 따라 배경을 아주 조금씩 이동시킴
+      const translateY = -(lastScrollY * PARALLAX_SPEED);
+      container.style.transform = `translate3d(0, ${translateY}px, 0)`;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      lastScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    };
+
+    // passive 옵션으로 스크롤 성능 확보
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
