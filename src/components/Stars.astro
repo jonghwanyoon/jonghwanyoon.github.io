@@ -4,11 +4,11 @@
  * CSS만으로 별이 박힌 밤하늘과 반짝이는 효과를 구현합니다.
  */
 
-// 유성 설정: 개수와 랜덤 데이터 생성
-const METEOR_COUNT = 4;
+// 유성 설정: 개수와 랜덤 데이터 생성 (Astro Sphere 스타일을 위해 개수 최적화)
+const METEOR_COUNT = 6;
 const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
-  top: (Math.random() * 40 - 10) + "%", // -10% ~ 30% 사이 (상단 위주)
-  left: (Math.random() * 100) + "%",     // 전체 가로폭
+  top: (Math.random() * 60 - 20) + "%", // -20% ~ 40% (화면 상단 및 상단 바깥쪽)
+  left: (Math.random() * 120 - 10) + "%", // -10% ~ 110% (화면 전체 가로폭)
   duration: (Math.random() * 2 + 2) + "s", // 2~4초 사이 비행 속도
   delay: (Math.random() * 15 + 1) + "s",  // 1~16초 사이 랜덤 딜레이
 }));
@@ -37,7 +37,7 @@ const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
     );
   })}
   
-  {/* 가속도가 붙은 랜덤 유성들 */}
+  {/* Astro Sphere 스타일의 길고 우아한 유성들 */}
   {meteors.map((m) => (
     <div 
       class="meteor" 
