@@ -13,20 +13,24 @@
     50% { opacity: 1; }
   }
   
-  @keyframes meteor-dynamic {
+  @keyframes meteor-stroke {
     0% {
+      transform: rotate(215deg) translateX(-200px);
+      clip-path: inset(0 100% 0 0);
       opacity: 0;
-      transform: rotate(215deg) translateX(-150vh);
     }
-    5% {
+    10% {
+      clip-path: inset(0 0 0 0);
       opacity: 1;
     }
-    90% {
+    80% {
+      clip-path: inset(0 0 0 0);
       opacity: 1;
     }
     100% {
+      transform: rotate(215deg) translateX(600px);
+      clip-path: inset(0 0 0 100%);
       opacity: 0;
-      transform: rotate(215deg) translateX(0);
     }
   }
 
@@ -130,8 +134,9 @@
 }
 
 .meteor {
-  @apply absolute w-[100px] h-[1px] bg-gradient-to-r from-white to-transparent;
-  box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.4);
-  opacity: 0;
-  animation: meteor-dynamic 3s ease-out infinite;
+  @apply absolute h-[1px] bg-gradient-to-r from-transparent via-white to-transparent;
+  width: 400px;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+  animation: meteor-stroke 3s ease-out infinite;
+  clip-path: inset(0 100% 0 0);
 }
