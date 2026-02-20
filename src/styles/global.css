@@ -16,20 +16,17 @@
   @keyframes meteor-dynamic {
     0% {
       opacity: 0;
-      transform: rotate(215deg) translateX(0);
-      animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+      transform: rotate(215deg) translateX(-150vh);
     }
-    10% {
+    5% {
       opacity: 1;
     }
     90% {
       opacity: 1;
-      transform: rotate(215deg) translateX(-1000px);
-      animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
     }
     100% {
       opacity: 0;
-      transform: rotate(215deg) translateX(-1100px);
+      transform: rotate(215deg) translateX(0);
     }
   }
 
@@ -136,5 +133,5 @@
   @apply absolute w-[100px] h-[1px] bg-gradient-to-r from-white to-transparent;
   box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.4);
   opacity: 0;
-  animation: meteor-dynamic 4s infinite cubic-bezier(0.95, 0.05, 0.795, 0.035);
+  animation: meteor-dynamic 3s ease-out infinite;
 }

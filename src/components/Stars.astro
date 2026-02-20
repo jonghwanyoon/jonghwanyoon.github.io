@@ -7,10 +7,10 @@
 // 유성 설정: 개수와 랜덤 데이터 생성 (Astro Sphere 스타일을 위해 개수 최적화)
 const METEOR_COUNT = 6;
 const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
-  top: (Math.random() * 60 - 20) + "%", // -20% ~ 40% (화면 상단 및 상단 바깥쪽)
-  left: (Math.random() * 120 - 10) + "%", // -10% ~ 110% (화면 전체 가로폭)
-  duration: (Math.random() * 2 + 2) + "s", // 2~4초 사이 비행 속도
-  delay: (Math.random() * 15 + 1) + "s",  // 1~16초 사이 랜덤 딜레이
+  top: (Math.random() * 80 + 10) + "%", // 10% ~ 90% (화면 안쪽 목적지)
+  left: (Math.random() * 80 + 10) + "%", // 10% ~ 90% (화면 안쪽 목적지)
+  duration: (Math.random() * 2 + 1) + "s", // 1~3초 사이 비행 속도 (더 빠르게)
+  delay: (Math.random() * 20 + 2) + "s",  // 2~22초 사이 랜덤 딜레이
 }));
 ---
 <div id="star-container" class="stars-container fixed inset-0 -z-10 bg-black overflow-hidden pointer-events-none transform-gpu">
@@ -37,7 +37,7 @@ const meteors = Array.from({ length: METEOR_COUNT }).map(() => ({
     );
   })}
   
-  {/* Astro Sphere 스타일의 길고 우아한 유성들 */}
+  {/* Astro Sphere 스타일의 길고 우아한 유성들 (화면 밖에서 시작해 화면 안에서 소멸) */}
   {meteors.map((m) => (
     <div 
       class="meteor" 
