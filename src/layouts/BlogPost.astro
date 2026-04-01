@@ -4,9 +4,12 @@ import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	counterpartUrl?: string;
+	isKorean?: boolean;
+};
 
-const { title, description, pubDate, updatedDate, heroImage, tags, category } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, category, counterpartUrl, isKorean } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -21,6 +24,11 @@ const { title, description, pubDate, updatedDate, heroImage, tags, category } = 
 		{/* Header Meta */}
 		<header class="space-y-4">
 			<div class="flex items-center gap-2 text-xs font-mono text-white/40 uppercase tracking-widest">
+				{counterpartUrl && (
+					<a href={counterpartUrl} class="text-white/40 hover:text-white/80 border border-white/10 hover:border-white/30 px-2 py-0.5 rounded transition-colors no-underline">
+						{isKorean ? 'EN' : 'KO'}
+					</a>
+				)}
 				{category && <span class="bg-white/10 px-2 py-0.5 rounded text-white/60">{category}</span>}
 				<FormattedDate date={pubDate} />
 				{updatedDate && (

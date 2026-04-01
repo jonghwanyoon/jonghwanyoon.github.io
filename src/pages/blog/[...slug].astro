@@ -1,20 +1,103 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
 	return posts.map((post) => ({
 		params: { slug: post.id },
-		props: post,
+		props: { post, allPosts: posts },
 	}));
 }
-type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
+const { post, allPosts } = Astro.props;
 const { Content } = await render(post);
+
+// Language detection
+const isKorean = post.id.endsWith('/ko');
+const baseId = isKorean ? post.id.replace(/\/ko$/, '') : post.id;
+const counterpartId = isKorean ? baseId : `${post.id}/ko`;
+const counterpart = allPosts.find((p: CollectionEntry<'blog'>) => p.id === counterpartId);
+
+// Series detection
+const isSeries = post.data.series;
+const childPosts = isSeries
+	? allPosts
+		.filter((p: CollectionEntry<'blog'>) => p.id !== post.id && p.id.startsWith(baseId + '/'))
+		.filter((p: CollectionEntry<'blog'>) => !p.id.endsWith('/ko'))
+		.filter((p: CollectionEntry<'blog'>) => !p.data.draft)
+		.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf())
+	: [];
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+{isSeries ? (
+	<BaseLayout title={post.data.title} description={post.data.description}>
+		<article class="space-y-8">
+			{post.data.heroImage && (
+				<div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
+					<Image width={1020} height={510} src={post.data.heroImage} alt={post.data.title} class="object-cover w-full h-full opacity-80" />
+				</div>
+			)}
+
+			<header class="space-y-4">
+				<div class="flex items-center justify-between">
+					<h1 class="text-4xl font-bold tracking-tight sm:text-5xl leading-[1.1]">
+						{post.data.title}
+					</h1>
+					{counterpart && (
+						<a href={`/blog/${counterpartId}/`} class="text-sm text-white/40 hover:text-white/80 border border-white/10 hover:border-white/30 px-3 py-1.5 rounded-lg transition-colors no-underline">
+							{isKorean ? 'EN' : 'KO'}
+						</a>
+					)}
+				</div>
+				<p class="text-xl text-white/60 leading-relaxed italic">
+					{post.data.description}
+				</p>
+			</header>
+
+			{/* Series content (optional intro text) */}
+			<div class="prose prose-invert prose-zinc max-w-none">
+				<Content />
+			</div>
+
+			<hr class="border-white/10" />
+
+			{/* Child posts grid */}
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{childPosts.map((child: CollectionEntry<'blog'>) => (
+					<a href={`/blog/${child.id}/`} class="group block rounded-xl border border-white/10 overflow-hidden hover:border-white/25 transition-colors no-underline">
+						{child.data.heroImage && (
+							<div class="aspect-video overflow-hidden">
+								<Image
+									width={480}
+									height={270}
+									src={child.data.heroImage}
+									alt={child.data.title}
+									class="object-cover w-full h-full opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-300"
+								/>
+							</div>
+						)}
+						<div class="p-4 space-y-2">
+							<h3 class="text-lg font-semibold text-white/80 group-hover:text-white transition-colors">
+								{child.data.title}
+							</h3>
+							<p class="text-sm text-white/40 line-clamp-2">
+								{child.data.description}
+							</p>
+							<span class="text-xs text-white/30 font-mono">
+								<FormattedDate date={child.data.pubDate} />
+							</span>
+						</div>
+					</a>
+				))}
+			</div>
+		</article>
+	</BaseLayout>
+) : (
+	<BlogPost {...post.data} counterpartUrl={counterpart ? `/blog/${counterpartId}/` : undefined} isKorean={isKorean}>
+		<Content />
+	</BlogPost>
+)}

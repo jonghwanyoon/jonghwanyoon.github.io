@@ -4,8 +4,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 
-const posts = (await getCollection('blog'))
+const allPosts = await getCollection('blog');
+const seriesPrefixes = allPosts
+	.filter(p => p.data.series)
+	.map(p => p.id.replace(/\/index$/, '') + '/');
+
+const posts = allPosts
 	.filter(post => !post.data.draft)
+	.filter(post => !post.id.endsWith('/ko'))
+	.filter(post => !seriesPrefixes.some(prefix => post.id.startsWith(prefix) && !post.data.series))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
