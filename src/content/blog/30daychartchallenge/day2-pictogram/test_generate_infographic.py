@@ -57,6 +57,13 @@ class GridPointTests(unittest.TestCase):
         self.assertAlmostEqual(last_x, 0.90)
         self.assertAlmostEqual(last_y, 0.20)
 
+    def test_build_grid_points_rejects_non_positive_dimensions(self):
+        with self.assertRaises(ValueError):
+            build_grid_points(columns=0, rows=3, left=0.10, right=0.90, bottom=0.20, top=0.80)
+
+        with self.assertRaises(ValueError):
+            build_grid_points(columns=4, rows=-1, left=0.10, right=0.90, bottom=0.20, top=0.80)
+
 
 if __name__ == "__main__":
     unittest.main()
