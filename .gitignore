@@ -22,3 +22,14 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# local agent / assistant metadata
+.codex
+.omc/
+**/.claude/
+**/.codex
+**/.omx/
+**/__pycache__/
+
+# working notes stored under blog posts
+src/content/blog/**/docs/superpowers/
