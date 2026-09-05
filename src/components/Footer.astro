@@ -1,9 +1,8 @@
 ---
 import Icon from './Icon.astro';
-import { AUTHOR, GITHUB_URL, SITE_TITLE } from '../consts';
-const [brandName, ...brandSuffix] = SITE_TITLE.split('.');
+import { GITHUB_URL, SITE_TITLE } from '../consts';
 ---
 <footer class="site-footer shell">
-  <div><a href="/" class="footer-brand">{brandName}<span>{brandSuffix.length ? `.${brandSuffix.join('.')}` : ''}</span></a></div>
-  <div class="footer-right"><div class="footer-links"><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub <Icon name="arrow" size={14}/></a><a href="/rss.xml">RSS <Icon name="rss" size={14}/></a><a href="/about/">소개</a></div><small>© {new Date().getFullYear()} {AUTHOR}</small></div>
+  <div><a href="/" class="footer-brand">{SITE_TITLE}</a></div>
+  <div class="footer-right"><div class="footer-links"><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub <Icon name="arrow" size={14}/></a><a href="/rss.xml">RSS <Icon name="rss" size={14}/></a><a href="/about/">소개</a></div><small>© {new Date().getFullYear()} {SITE_TITLE}</small></div>
 </footer>

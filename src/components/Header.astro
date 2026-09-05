@@ -1,12 +1,11 @@
 ---
 import Icon from './Icon.astro';
 import { SITE_TITLE } from '../consts';
-const [brandName, ...brandSuffix] = SITE_TITLE.split('.');
 const pathname = Astro.url.pathname;
 ---
 <header class="site-header">
   <div class="header-inner shell">
-    <a href="/" class="brand" aria-label={`${SITE_TITLE} 홈`}><span class="brand-symbol">j<span>.</span></span><span>{brandName}<span class="brand-suffix">{brandSuffix.length ? `.${brandSuffix.join('.')}` : ''}</span></span></a>
+    <a href="/" class="brand" aria-label={`${SITE_TITLE} 홈`}><img class="brand-symbol" src="/favicon.svg" width="34" height="34" alt=""/><span>{SITE_TITLE}</span></a>
     <nav class="main-nav" aria-label="메인 메뉴">
       <a href="/blog/" aria-current={pathname.startsWith('/blog') ? 'page' : undefined}>글</a>
       <a href="/category/papers/" aria-current={pathname.startsWith('/category/papers') ? 'page' : undefined}>논문 노트</a>

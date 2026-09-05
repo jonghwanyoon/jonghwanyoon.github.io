@@ -6,7 +6,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import '../styles/global.css';
 interface Props { title?: string; description?: string; article?: boolean; published?: Date; updated?: Date; noindex?: boolean }
 const { title, description = SITE_DESCRIPTION, article = false, published, updated, noindex = false } = Astro.props;
-const pageTitle = title ? `${title} — ${SITE_TITLE}` : `${SITE_TITLE} — 기술과 배움의 기록`;
+const pageTitle = title ? `${title} — ${SITE_TITLE}` : SITE_TITLE;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>

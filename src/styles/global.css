@@ -32,9 +32,7 @@ main{min-height:calc(100vh - 260px)}
 .header-inner{height:88px;display:flex;align-items:center;gap:40px}
 .brand{display:flex;gap:11px;align-items:center;font-size:21px;font-weight:750;letter-spacing:-.7px;white-space:nowrap}
 .brand:hover{color:var(--fg)}
-.brand-symbol{background:var(--fg);color:var(--bg);width:34px;height:34px;display:flex;justify-content:center;align-items:center;border-radius:8px;font-size:27px;line-height:1;padding-bottom:5px;letter-spacing:-3px;padding-right:3px}
-.brand-symbol span{color:#78a2ff}
-.brand-suffix{color:var(--muted);font-weight:450}
+.brand-symbol{display:block;width:34px;height:34px;flex-shrink:0;border-radius:8px}
 .main-nav{display:flex;align-items:center;gap:30px;margin-left:auto;font-size:14px;font-weight:550;height:100%}
 .main-nav a{height:100%;display:flex;align-items:center;position:relative;white-space:nowrap}
 .main-nav a[aria-current=page]{color:var(--blue)}
@@ -122,9 +120,6 @@ kbd{font:12px/1.2 var(--mono);padding:3px 5px;border:1px solid var(--line);borde
 .article-header h1{font-size:40px;letter-spacing:-1.65px;line-height:1.5;margin:18px 0 16px;font-weight:750;overflow-wrap:anywhere}
 .article-description{font-size:16px;color:var(--muted);line-height:1.9;max-width:740px}
 .article-byline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:23px;font-size:12px;color:var(--muted)}
-.byline-avatar{display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--tint);color:var(--blue);border-radius:50%;font-size:12px;font-weight:700}
-.article-byline .byline-name{font-weight:550;color:var(--fg)}
-.article-byline .post-tags{margin-left:10px}
 .article-grid{display:grid;grid-template-columns:minmax(0,760px) 220px;gap:80px;border-top:1px solid var(--line);padding-top:38px}
 .article-content{min-width:0}
 .prose{font-size:17px;line-height:2;letter-spacing:-.2px;overflow-wrap:anywhere}
@@ -218,7 +213,7 @@ kbd{font:12px/1.2 var(--mono);padding:3px 5px;border:1px solid var(--line);borde
 @media(max-width:760px){.shell{width:calc(100% - 40px)}
 .header-inner{height:74px;gap:15px;flex-wrap:wrap;position:relative}
 .brand{font-size:19px;gap:8px}
-.brand-symbol{width:30px;height:30px;font-size:24px}
+.brand-symbol{width:30px;height:30px}
 .header-tools{margin-left:auto;border:0;padding:0;gap:3px}
 .search-trigger{padding:10px;width:40px;height:42px}
 .search-trigger>span{display:none}

@@ -6,7 +6,6 @@ import Icon from '../../components/Icon.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getPosts, categories, postUrl } from '../../lib/posts';
 import { readingMinutes, formatDate } from '../../lib/content.mjs';
-import { AUTHOR } from '../../consts';
 import { tagUrl } from '../../lib/tags.mjs';
 import 'katex/dist/katex.min.css';
 export async function getStaticPaths() { return (await getPosts()).map(post => ({ params: { slug: post.id }, props: { post } })); }
@@ -15,13 +14,13 @@ const { Content, headings } = await render(post);
 const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 const related = (await getPosts()).filter(p => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some(t => post.data.tags.includes(t)))).slice(0, 2);
 const { paper } = post.data;
-const structured = { '@context':'https://schema.org', '@type':'BlogPosting', headline:post.data.title, description:post.data.description, author:{'@type':'Person',name:AUTHOR,url:new URL('/about/',Astro.site).href}, datePublished:post.data.pubDate.toISOString(),dateModified:(post.data.updatedDate ?? post.data.pubDate).toISOString(),url:new URL(postUrl(post),Astro.site).href,inLanguage:'ko' };
+const structured = { '@context':'https://schema.org', '@type':'BlogPosting', headline:post.data.title, description:post.data.description, author:{'@type':'Person',url:new URL('/about/',Astro.site).href}, datePublished:post.data.pubDate.toISOString(),dateModified:(post.data.updatedDate ?? post.data.pubDate).toISOString(),url:new URL(postUrl(post),Astro.site).href,inLanguage:'ko' };
 ---
 <BaseLayout title={post.data.title} description={post.data.description} article published={post.data.pubDate} updated={post.data.updatedDate}>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structured).replace(/</g, '\\u003c')}/>
   <article class="article-shell shell">
     <a class="back-link" href="/blog/"><Icon name="left" size={16}/>전체 기록</a>
-    <header class="article-header"><div class="post-meta"><a class="category-label" href={`/category/${post.data.category}/`}>{categories[post.data.category].label}</a><span class="meta-dot">·</span><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time><span class="meta-dot">·</span><span>약 {readingMinutes(post.body ?? '')}분</span></div><h1>{post.data.title}</h1><p class="article-description">{post.data.description}</p><div class="article-byline"><span class="byline-avatar">JY</span><a class="byline-name" href="/about/">{AUTHOR}</a>{post.data.updatedDate && <span>· 수정 {formatDate(post.data.updatedDate)}</span>}<div class="post-tags">{post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}</div></div></header>
+    <header class="article-header"><div class="post-meta"><a class="category-label" href={`/category/${post.data.category}/`}>{categories[post.data.category].label}</a><span class="meta-dot">·</span><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time><span class="meta-dot">·</span><span>약 {readingMinutes(post.body ?? '')}분</span></div><h1>{post.data.title}</h1><p class="article-description">{post.data.description}</p><div class="article-byline">{post.data.updatedDate && <span>수정 {formatDate(post.data.updatedDate)}</span>}<div class="post-tags">{post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}</div></div></header>
     <div class="article-grid"><div class="article-content">
       {tocHeadings.length > 0 && <details class="toc-mobile"><summary>이 글의 목차</summary><TableOfContents headings={headings} label={false}/></details>}
       {paper && <section class="paper-info" aria-label="논문 원문 정보"><span class="eyebrow">논문 원문</span><h2>{paper.title}</h2><p>{paper.authors} · {paper.year}</p><a href={paper.url} target="_blank" rel="noopener noreferrer">원문 읽기 <Icon name="arrow" size={15}/></a></section>}
