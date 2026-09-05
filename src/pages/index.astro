@@ -1,60 +1,22 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
-
-const recentPosts = (await getCollection('blog'))
-	.filter(post => !post.data.draft)
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+import PostCard from '../components/PostCard.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Icon from '../components/Icon.astro';
+import { getPosts } from '../lib/posts';
+const posts = await getPosts();
 ---
-
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<section class="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 py-12">
-		<div class="space-y-4 animate-fade-in-up">
-			<h1 class="text-6xl md:text-8xl font-black tracking-tighter text-white">
-				ORBITING <br/> THOUGHTS
-			</h1>
-			<p class="text-lg md:text-xl text-white/50 font-light tracking-widest uppercase">
-				Exploring the void between minimalism and complexity
-			</p>
-		</div>
-
-		<div class="w-24 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent animate-fade-in-up" style="animation-delay: 0.2s;"></div>
-
-		<div class="flex gap-4 animate-fade-in-up" style="animation-delay: 0.4s;">
-			<a href="/blog" class="px-8 py-3 bg-white text-black font-bold text-sm hover:bg-white/90 transition-all rounded-full">
-				BEGIN TRANSMISSION
-			</a>
-			<a href="/about" class="px-8 py-3 border border-white/20 text-white font-bold text-sm hover:bg-white/5 transition-all rounded-full">
-				IDENTIFY SIGNAL
-			</a>
-		</div>
-	</section>
-
-	<section class="pt-24 space-y-12 animate-fade-in-up" style="animation-delay: 0.6s;">
-		<div class="flex items-center gap-4">
-			<h2 class="text-xs font-black tracking-[0.2em] text-white/30 uppercase">Recent Signals</h2>
-			<div class="flex-1 h-px bg-white/5"></div>
-		</div>
-
-		<div class="grid gap-8">
-			{recentPosts.map(post => (
-				<a href={`/blog/${post.id}/`} class="group block space-y-2 no-underline">
-					<div class="flex justify-between items-baseline">
-						<h3 class="text-xl font-medium text-white/70 group-hover:text-white transition-colors">
-							{post.data.title}
-						</h3>
-						<span class="text-xs font-mono text-white/20">
-							<FormattedDate date={post.data.pubDate} />
-						</span>
-					</div>
-					<p class="text-sm text-white/40 line-clamp-1 group-hover:text-white/50 transition-colors">
-						{post.data.description}
-					</p>
-				</a>
-			))}
-		</div>
-	</section>
+<BaseLayout>
+  <section class="hero shell">
+    <div class="hero-heading"><p class="eyebrow"><span class="status-dot"></span> NOTES ON TECH & RESEARCH</p><h1>배우고, 연결하고,<br/><span>기록합니다.</span></h1></div>
+    <div class="hero-note"><span class="hero-index">01 / ALWAYS LEARNING</span><p>기술을 깊이 이해하는 과정,<br/>{' '}논문 한 편에서 시작되는 생각.<br/>{' '}배운 것을 내 언어로 남기는 공간입니다.</p><a href="/about/">조금 더 알아보기 <Icon name="arrow" size={17}/></a></div>
+  </section>
+  <div class="home-content shell">
+    <section class="latest-section" aria-labelledby="latest-title">
+      <div class="section-heading"><div><span class="eyebrow">THE LATEST</span><h2 id="latest-title">최근 기록<span class="heading-count">{String(posts.length).padStart(2, '0')}</span></h2></div><a class="text-link" href="/blog/">모든 글 보기 <Icon name="right" size={17}/></a></div>
+      {posts.length ? <div class="post-list home-posts">{posts.slice(0, 5).map((post, index) => <PostCard post={post} featured={posts.length === 1 && index === 0}/>)}</div> : <div class="empty-state"><h3>첫 기록을 준비하고 있습니다.</h3><p>곧 새로운 배움을 이곳에서 나눕니다.</p></div>}
+      <div class="continue-note"><span class="tiny-cross">+</span><span>작은 이해가 모여, 더 넓은 시야가 되도록.</span><span class="tiny-line"></span></div>
+    </section>
+    <Sidebar/>
+  </div>
 </BaseLayout>

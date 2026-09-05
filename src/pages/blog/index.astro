@@ -1,49 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-
-const allPosts = await getCollection('blog');
-const seriesPrefixes = allPosts
-	.filter(p => p.data.series)
-	.map(p => p.id.replace(/\/index$/, '') + '/');
-
-const posts = allPosts
-	.filter(post => !post.data.draft)
-	.filter(post => !post.id.endsWith('/ko'))
-	.filter(post => !seriesPrefixes.some(prefix => post.id.startsWith(prefix) && !post.data.series))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+import Archive from '../../components/Archive.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getPosts } from '../../lib/posts';
+const posts = await getPosts();
 ---
-
-<BaseLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
-	<section class="space-y-12">
-		<h1 class="text-3xl font-bold tracking-tighter">Blog Archive</h1>
-		
-		<ul class="space-y-8">
-			{
-				posts.map((post) => (
-					<li class="group">
-						<a href={`/blog/${post.id}/`} class="flex flex-col md:flex-row md:items-baseline md:gap-4 no-underline">
-							<span class="text-sm text-white/40 font-mono shrink-0">
-								<FormattedDate date={post.data.pubDate} />
-							</span>
-							<div class="flex flex-col gap-1">
-								<h2 class="text-xl font-medium text-white/80 group-hover:text-white transition-colors underline-offset-4 group-hover:underline">
-									{post.data.title}
-								</h2>
-								<p class="text-sm text-white/40 line-clamp-1">
-									{post.data.description}
-								</p>
-							</div>
-						</a>
-					</li>
-				))
-			}
-		</ul>
-		
-		{posts.length === 0 && (
-			<p class="text-white/40 italic">아직 게시된 글이 없습니다. 곧 흥미로운 이야기로 찾아뵙겠습니다.</p>
-		)}
-	</section>
+<BaseLayout title="전체 기록" description="기술, 논문, 학습의 과정을 담은 모든 기록을 둘러보세요.">
+  <div class="shell"><header class="page-heading"><p class="eyebrow">THE ARCHIVE</p><h1>모든 기록<span class="blue-dot">.</span></h1><p>궁금함에서 시작해, 이해에 닿기까지.</p></header><div class="archive-layout"><section aria-label="글 목록"><Archive posts={posts}/></section><Sidebar/></div></div>
 </BaseLayout>

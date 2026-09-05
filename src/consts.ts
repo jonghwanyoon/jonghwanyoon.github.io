@@ -1,5 +1,4 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
-
-export const SITE_TITLE = 'Orbiting Thoughts';
-export const SITE_DESCRIPTION = '코드와 우주, 미니멀리즘의 교차점을 탐구하는 공간';
+export const SITE_TITLE = 'Jonghwan.log';
+export const SITE_DESCRIPTION = '기술을 탐구하고, 논문을 읽고, 배운 것을 내 언어로 기록합니다. 윤종환의 기술과 학습 블로그.';
+export const AUTHOR = 'Jonghwan Yoon';
+export const GITHUB_URL = 'https://github.com/jonghwanyoon';

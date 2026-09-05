@@ -1,103 +1,34 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import { Image } from 'astro:assets';
-
-export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: { post, allPosts: posts },
-	}));
-}
-
-const { post, allPosts } = Astro.props;
-const { Content } = await render(post);
-
-// Language detection
-const isKorean = post.id.endsWith('/ko');
-const baseId = isKorean ? post.id.replace(/\/ko$/, '') : post.id;
-const counterpartId = isKorean ? baseId : `${post.id}/ko`;
-const counterpart = allPosts.find((p: CollectionEntry<'blog'>) => p.id === counterpartId);
-
-// Series detection
-const isSeries = post.data.series;
-const childPosts = isSeries
-	? allPosts
-		.filter((p: CollectionEntry<'blog'>) => p.id !== post.id && p.id.startsWith(baseId + '/'))
-		.filter((p: CollectionEntry<'blog'>) => !p.id.endsWith('/ko'))
-		.filter((p: CollectionEntry<'blog'>) => !p.data.draft)
-		.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf())
-	: [];
+import TableOfContents from '../../components/TableOfContents.astro';
+import Icon from '../../components/Icon.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, categories, postUrl } from '../../lib/posts';
+import { readingMinutes, formatDate } from '../../lib/content.mjs';
+import { AUTHOR } from '../../consts';
+import { tagUrl } from '../../lib/tags.mjs';
+import 'katex/dist/katex.min.css';
+export async function getStaticPaths() { return (await getPosts()).map(post => ({ params: { slug: post.id }, props: { post } })); }
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
+const related = (await getPosts()).filter(p => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some(t => post.data.tags.includes(t)))).slice(0, 2);
+const { paper } = post.data;
+const structured = { '@context':'https://schema.org', '@type':'BlogPosting', headline:post.data.title, description:post.data.description, author:{'@type':'Person',name:AUTHOR,url:new URL('/about/',Astro.site).href}, datePublished:post.data.pubDate.toISOString(),dateModified:(post.data.updatedDate ?? post.data.pubDate).toISOString(),url:new URL(postUrl(post),Astro.site).href,inLanguage:'ko' };
 ---
-
-{isSeries ? (
-	<BaseLayout title={post.data.title} description={post.data.description}>
-		<article class="space-y-8">
-			{post.data.heroImage && (
-				<div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
-					<Image width={1020} height={510} src={post.data.heroImage} alt={post.data.title} class="object-cover w-full h-full opacity-80" />
-				</div>
-			)}
-
-			<header class="space-y-4">
-				<div class="flex items-center justify-between">
-					<h1 class="text-4xl font-bold tracking-tight sm:text-5xl leading-[1.1]">
-						{post.data.title}
-					</h1>
-					{counterpart && (
-						<a href={`/blog/${counterpartId}/`} class="text-sm text-white/40 hover:text-white/80 border border-white/10 hover:border-white/30 px-3 py-1.5 rounded-lg transition-colors no-underline">
-							{isKorean ? 'EN' : 'KO'}
-						</a>
-					)}
-				</div>
-				<p class="text-xl text-white/60 leading-relaxed italic">
-					{post.data.description}
-				</p>
-			</header>
-
-			{/* Series content (optional intro text) */}
-			<div class="prose prose-invert prose-zinc max-w-none">
-				<Content />
-			</div>
-
-			<hr class="border-white/10" />
-
-			{/* Child posts grid */}
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-				{childPosts.map((child: CollectionEntry<'blog'>) => (
-					<a href={`/blog/${child.id}/`} class="group block rounded-xl border border-white/10 overflow-hidden hover:border-white/25 transition-colors no-underline">
-						{child.data.heroImage && (
-							<div class="aspect-video overflow-hidden">
-								<Image
-									width={480}
-									height={270}
-									src={child.data.heroImage}
-									alt={child.data.title}
-									class="object-cover w-full h-full opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-300"
-								/>
-							</div>
-						)}
-						<div class="p-4 space-y-2">
-							<h3 class="text-lg font-semibold text-white/80 group-hover:text-white transition-colors">
-								{child.data.title}
-							</h3>
-							<p class="text-sm text-white/40 line-clamp-2">
-								{child.data.description}
-							</p>
-							<span class="text-xs text-white/30 font-mono">
-								<FormattedDate date={child.data.pubDate} />
-							</span>
-						</div>
-					</a>
-				))}
-			</div>
-		</article>
-	</BaseLayout>
-) : (
-	<BlogPost {...post.data} counterpartUrl={counterpart ? `/blog/${counterpartId}/` : undefined} isKorean={isKorean}>
-		<Content />
-	</BlogPost>
-)}
+<BaseLayout title={post.data.title} description={post.data.description} article published={post.data.pubDate} updated={post.data.updatedDate}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structured).replace(/</g, '\\u003c')}/>
+  <article class="article-shell shell">
+    <a class="back-link" href="/blog/"><Icon name="left" size={16}/>전체 기록</a>
+    <header class="article-header"><div class="post-meta"><a class="category-label" href={`/category/${post.data.category}/`}>{categories[post.data.category].label}</a><span class="meta-dot">·</span><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time><span class="meta-dot">·</span><span>약 {readingMinutes(post.body ?? '')}분</span></div><h1>{post.data.title}</h1><p class="article-description">{post.data.description}</p><div class="article-byline"><span class="byline-avatar">JY</span><a class="byline-name" href="/about/">{AUTHOR}</a>{post.data.updatedDate && <span>· 수정 {formatDate(post.data.updatedDate)}</span>}<div class="post-tags">{post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}</div></div></header>
+    <div class="article-grid"><div class="article-content">
+      {tocHeadings.length > 0 && <details class="toc-mobile"><summary>이 글의 목차</summary><TableOfContents headings={headings} label={false}/></details>}
+      {paper && <section class="paper-info" aria-label="논문 원문 정보"><span class="eyebrow">ORIGINAL PAPER</span><h2>{paper.title}</h2><p>{paper.authors} · {paper.year}</p><a href={paper.url} target="_blank" rel="noopener noreferrer">원문 읽기 <Icon name="arrow" size={15}/></a></section>}
+      <div class="prose"><Content/></div>
+      <footer class="article-end"><div class="article-end-top"><a href="/blog/" class="text-link"><Icon name="left" size={16}/>전체 기록으로</a><button class="share-button"><Icon name="link" size={15}/>링크 복사</button></div><p>함께 생각해 볼 내용이나 정정할 부분이 있나요?<br/><a href="https://github.com/jonghwanyoon/jonghwanyoon.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub에서 의견을 나눠주세요 ↗</a></p></footer>
+      {related.length > 0 && <section class="related-posts"><h2>함께 읽을 기록</h2>{related.map(p => <PostCard post={p}/>)}</section>}
+    </div><aside class="article-aside">{tocHeadings.length > 0 && <div class="toc-desktop"><TableOfContents headings={headings}/></div>}</aside></div>
+  </article>
+  <script>import '../../scripts/reading';</script>
+</BaseLayout>

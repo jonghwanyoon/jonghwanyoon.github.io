@@ -1,32 +1,46 @@
 name: Deploy to GitHub Pages
 
 on:
-  # 'master' 브랜치에 푸시될 때마다 실행
   push:
     branches: [master]
-  # GitHub Actions 탭에서 수동으로 실행 가능하게 설정
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
-# GITHUB_TOKEN에 대한 권한 설정 (배포를 위해 필요)
 permissions:
   contents: read
-  pages: write
-  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ASTRO_TELEMETRY_DISABLED: 1
     steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
-
-      - name: Install, bundle, and upload your site
-        uses: withastro/action@v3
-        # node_version: 20 # 필요한 경우 노드 버전 명시 가능
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run check
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

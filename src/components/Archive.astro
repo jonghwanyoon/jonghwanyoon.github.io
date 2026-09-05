@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostCard from './PostCard.astro';
+import Icon from './Icon.astro';
+import { categories } from '../lib/posts';
+interface Props { posts: CollectionEntry<'blog'>[]; selected?: string }
+const { posts, selected = 'all' } = Astro.props;
+---
+<nav class="filter-tabs" aria-label="글 분류">
+  <a href="/blog/" aria-current={selected === 'all' ? 'page' : undefined}>전체 글</a>
+  {Object.entries(categories).map(([key, category]) => <a href={`/category/${key}/`} aria-current={selected === key ? 'page' : undefined}>{category.label}</a>)}
+</nav>
+<div class="list-caption"><span>{posts.length}개의 기록</span><span>최신순</span></div>
+{posts.length ? <div class="post-list">{posts.map(post => <PostCard post={post}/>)}</div> : <div class="empty-state"><span class="empty-icon"><Icon name={selected === 'papers' ? 'book' : 'pen'} size={28}/></span><h2>첫 기록을 준비하고 있습니다.</h2><p>배우고 정리한 내용이 이곳에 하나씩 쌓일 예정입니다.</p><a href="/blog/">전체 기록 둘러보기 <Icon name="right" size={16}/></a></div>}

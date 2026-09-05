@@ -1,0 +1,11 @@
+---
+import Icon from './Icon.astro';
+---
+<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
+  <div class="search-top"><h2 id="search-title">기록 검색</h2><button class="icon-button" id="close-search" aria-label="검색 닫기"><Icon name="close"/></button></div>
+  <label class="sr-only" for="search-input">제목, 내용 또는 태그 검색</label>
+  <div class="search-field"><Icon name="search"/><input id="search-input" type="search" placeholder="어떤 기록을 찾고 있나요?" autocomplete="off"/></div>
+  <p id="search-status" class="search-status" role="status">제목, 내용, 태그로 검색할 수 있습니다.</p>
+  <div id="search-results" class="search-results"></div>
+  <div class="search-bottom"><span><kbd>Tab</kbd> 결과 이동</span><span><kbd>Esc</kbd> 닫기</span></div>
+</dialog>

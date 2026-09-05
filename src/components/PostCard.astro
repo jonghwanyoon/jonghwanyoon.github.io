@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { categories, postUrl } from '../lib/posts';
+import { formatDate, readingMinutes } from '../lib/content.mjs';
+import Icon from './Icon.astro';
+import { tagUrl } from '../lib/tags.mjs';
+interface Props { post: CollectionEntry<'blog'>; featured?: boolean }
+const { post, featured = false } = Astro.props;
+---
+<article class:list={['post-card', { featured }]}>
+  <div class="post-meta"><a href={`/category/${post.data.category}/`} class={`category-label ${post.data.category}`}>{categories[post.data.category].label}</a><span class="meta-dot">·</span><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>{featured && <span class="featured-label">첫 번째 기록</span>}</div>
+  <h3><a href={postUrl(post)}>{post.data.title}<Icon name="right" size={23}/></a></h3>
+  <p>{post.data.description}</p>
+  <div class="post-bottom"><div class="post-tags">{post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}</div><span class="read-time"><Icon name="clock" size={14}/>약 {readingMinutes(post.body ?? '')}분</span></div>
+</article>

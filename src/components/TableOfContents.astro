@@ -1,0 +1,6 @@
+---
+import type { MarkdownHeading } from 'astro';
+interface Props { headings: MarkdownHeading[]; label?: boolean }
+const { headings, label = true } = Astro.props;
+---
+<nav class="toc" aria-label="글 목차">{label && <h2>ON THIS PAGE · 목차</h2>}<ol>{headings.filter(h => h.depth === 2 || h.depth === 3).map(h => <li class={`depth-${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></nav>

@@ -1,24 +1,24 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const blog = defineCollection({
-	// Only load publishable post entries, not working notes stored alongside posts.
-	loader: glob({ base: './src/content/blog', pattern: '**/{index,ko}.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
-			// Extended fields for better management
-			tags: z.array(z.string()).default([]),
-			draft: z.boolean().default(false),
-			category: z.string().optional(),
-			series: z.boolean().default(false),
-		}),
+  loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    category: z.enum(['tech', 'papers', 'notes']),
+    tags: z.array(z.string().trim().min(1).transform(value => value.normalize('NFC'))).default([]),
+    draft: z.boolean().default(false),
+    paper: z.object({
+      title: z.string(),
+      authors: z.string(),
+      year: z.number().int(),
+      url: z.url().refine((value) => /^https:\/\//i.test(value), 'HTTPS 링크를 사용해 주세요.'),
+    }).optional(),
+  }),
 });
 
 export const collections = { blog };

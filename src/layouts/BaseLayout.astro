@@ -1,28 +1,37 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Stars from '../components/Stars.astro';
-
-interface Props {
-  title: string;
-  description: string;
-}
-
-const { title, description } = Astro.props;
+import Search from '../components/Search.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import '../styles/global.css';
+interface Props { title?: string; description?: string; article?: boolean; published?: Date; updated?: Date; noindex?: boolean }
+const { title, description = SITE_DESCRIPTION, article = false, published, updated, noindex = false } = Astro.props;
+const pageTitle = title ? `${title} — ${SITE_TITLE}` : `${SITE_TITLE} — 기술과 배움의 기록`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
-
 <!doctype html>
 <html lang="ko">
-	<head>
-		<BaseHead title={title} description={description} />
-	</head>
-	<body class="bg-black text-white/90">
-		<Stars />
-		<Header />
-		<main class="max-w-3xl mx-auto px-6 py-12">
-			<slot />
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="generator" content={Astro.generator}/><title>{pageTitle}</title>
+    <meta name="description" content={description}/><meta name="theme-color" content="#ffffff"/>
+    <link rel="canonical" href={canonical}/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} RSS`} href="/rss.xml"/>
+    <meta property="og:type" content={article ? 'article' : 'website'}/><meta property="og:site_name" content={SITE_TITLE}/><meta property="og:locale" content="ko_KR"/>
+    <meta property="og:title" content={pageTitle}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/>
+    <meta name="twitter:card" content="summary"/>
+    {published && <meta property="article:published_time" content={published.toISOString()}/>}
+    {updated && <meta property="article:modified_time" content={updated.toISOString()}/>}
+    {noindex && <meta name="robots" content="noindex"/>}
+    <script is:inline>
+      (() => { let theme; try { theme = localStorage.getItem('theme'); } catch {} const dark = theme ? theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; document.documentElement.dataset.theme = dark ? 'dark' : 'light'; })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+    <Header/>
+    <main id="main-content" tabindex="-1"><slot/></main>
+    <Footer/><Search/>
+    <script>import '../scripts/site';</script>
+  </body>
 </html>

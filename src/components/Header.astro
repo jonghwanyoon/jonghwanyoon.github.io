@@ -1,17 +1,20 @@
 ---
-import HeaderLink from './HeaderLink.astro';
+import Icon from './Icon.astro';
 import { SITE_TITLE } from '../consts';
+const [brandName, ...brandSuffix] = SITE_TITLE.split('.');
+const pathname = Astro.url.pathname;
 ---
-
-<header class="max-w-3xl mx-auto px-6 py-8 flex items-center justify-between bg-transparent">
-	<h2 class="text-lg font-bold tracking-tighter">
-		<a href="/" class="text-white no-underline hover:text-white/80 transition-opacity">
-			{SITE_TITLE}
-		</a>
-	</h2>
-	<nav class="flex gap-6 text-sm font-medium">
-		<HeaderLink href="/">Home</HeaderLink>
-		<HeaderLink href="/blog">Blog</HeaderLink>
-		<HeaderLink href="/about">About</HeaderLink>
-	</nav>
+<header class="site-header">
+  <div class="header-inner shell">
+    <a href="/" class="brand" aria-label={`${SITE_TITLE} 홈`}><span class="brand-symbol">j<span>.</span></span><span>{brandName}<span class="brand-suffix">{brandSuffix.length ? `.${brandSuffix.join('.')}` : ''}</span></span></a>
+    <nav class="main-nav" aria-label="메인 메뉴">
+      <a href="/blog/" aria-current={pathname.startsWith('/blog') ? 'page' : undefined}>글</a>
+      <a href="/category/papers/" aria-current={pathname.startsWith('/category/papers') ? 'page' : undefined}>논문 노트</a>
+      <a href="/about/" aria-current={pathname === '/about/' ? 'page' : undefined}>소개</a>
+    </nav>
+    <div class="header-tools">
+      <button class="search-trigger" data-open-search aria-label="블로그 검색 열기"><Icon name="search" size={18}/><span>검색</span><kbd>⌘ K</kbd></button>
+      <button class="icon-button theme-toggle" id="theme-toggle" aria-label="다크 모드로 전환"><Icon name="moon" class="moon-icon"/><Icon name="sun" class="sun-icon"/></button>
+    </div>
+  </div>
 </header>

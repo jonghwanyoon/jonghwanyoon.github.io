@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Archive from '../../components/Archive.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { categories, getPosts } from '../../lib/posts';
+export function getStaticPaths() { return Object.keys(categories).map(category => ({ params: { category } })); }
+const category = Astro.params.category as keyof typeof categories;
+const info = categories[category];
+const posts = (await getPosts()).filter(post => post.data.category === category);
+const labels = { tech: 'TECH & ENGINEERING', papers: 'PAPER NOTES', notes: 'LEARNING IN PUBLIC' };
+---
+<BaseLayout title={info.label} description={info.description}>
+  <div class="shell"><header class="page-heading"><p class="eyebrow">{labels[category]}</p><h1>{info.label}<span class="blue-dot">.</span></h1><p>{info.description}</p></header><div class="archive-layout"><section aria-label={`${info.label} 글 목록`}><Archive posts={posts} selected={category}/></section><Sidebar/></div></div>
+</BaseLayout>
