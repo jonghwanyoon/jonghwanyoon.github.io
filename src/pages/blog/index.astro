@@ -5,6 +5,6 @@ import Sidebar from '../../components/Sidebar.astro';
 import { getPosts } from '../../lib/posts';
 const posts = await getPosts();
 ---
-<BaseLayout title="전체 기록" description="기술, 논문, 학습의 과정을 담은 모든 기록을 둘러보세요.">
-  <div class="shell"><header class="page-heading"><p class="eyebrow">THE ARCHIVE</p><h1>모든 기록<span class="blue-dot">.</span></h1><p>궁금함에서 시작해, 이해에 닿기까지.</p></header><div class="archive-layout"><section aria-label="글 목록"><Archive posts={posts}/></section><Sidebar/></div></div>
+<BaseLayout title="전체 기록" description="기술, 논문, 학습 기록의 전체 글 목록.">
+  <div class="shell"><header class="page-heading"><h1>전체 글</h1></header><div class="archive-layout"><section aria-label="글 목록"><Archive posts={posts}/></section><Sidebar/></div></div>
 </BaseLayout>

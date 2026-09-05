@@ -1,4 +1,4 @@
 export const SITE_TITLE = 'Jonghwan.log';
-export const SITE_DESCRIPTION = '기술을 탐구하고, 논문을 읽고, 배운 것을 내 언어로 기록합니다. 윤종환의 기술과 학습 블로그.';
+export const SITE_DESCRIPTION = '공부한 내용과 읽은 논문을 정리하는 개인 블로그입니다.';
 export const AUTHOR = 'Jonghwan Yoon';
 export const GITHUB_URL = 'https://github.com/jonghwanyoon';

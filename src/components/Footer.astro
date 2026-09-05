@@ -4,6 +4,6 @@ import { AUTHOR, GITHUB_URL, SITE_TITLE } from '../consts';
 const [brandName, ...brandSuffix] = SITE_TITLE.split('.');
 ---
 <footer class="site-footer shell">
-  <div><a href="/" class="footer-brand">{brandName}<span>{brandSuffix.length ? `.${brandSuffix.join('.')}` : ''}</span></a><p>한 번의 배움, 하나의 기록.</p></div>
+  <div><a href="/" class="footer-brand">{brandName}<span>{brandSuffix.length ? `.${brandSuffix.join('.')}` : ''}</span></a></div>
   <div class="footer-right"><div class="footer-links"><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub <Icon name="arrow" size={14}/></a><a href="/rss.xml">RSS <Icon name="rss" size={14}/></a><a href="/about/">소개</a></div><small>© {new Date().getFullYear()} {AUTHOR}</small></div>
 </footer>

@@ -11,4 +11,4 @@ const { posts, selected = 'all' } = Astro.props;
   {Object.entries(categories).map(([key, category]) => <a href={`/category/${key}/`} aria-current={selected === key ? 'page' : undefined}>{category.label}</a>)}
 </nav>
 <div class="list-caption"><span>{posts.length}개의 기록</span><span>최신순</span></div>
-{posts.length ? <div class="post-list">{posts.map(post => <PostCard post={post}/>)}</div> : <div class="empty-state"><span class="empty-icon"><Icon name={selected === 'papers' ? 'book' : 'pen'} size={28}/></span><h2>첫 기록을 준비하고 있습니다.</h2><p>배우고 정리한 내용이 이곳에 하나씩 쌓일 예정입니다.</p><a href="/blog/">전체 기록 둘러보기 <Icon name="right" size={16}/></a></div>}
+{posts.length ? <div class="post-list">{posts.map(post => <PostCard post={post}/>)}</div> : <div class="empty-state"><span class="empty-icon"><Icon name={selected === 'papers' ? 'book' : 'pen'} size={28}/></span><h2>아직 작성한 글이 없습니다.</h2><a href="/blog/">전체 글 <Icon name="right" size={16}/></a></div>}

@@ -97,7 +97,7 @@ console.log(message);
 
 사이트 이름, 설명, 작성자 등 표시 정보는 `src/consts.ts`에서 수정합니다. 배포 주소와 Astro 통합 설정은 `astro.config.mjs`, 화면 스타일은 `src/styles/`에 있습니다.
 
-개인 블로그를 소개하는 첫 글만 포함되어 있습니다. 기술 글과 논문 노트는 직접 작성해 채워 나가세요.
+`src/content/blog/welcome.md`는 서식을 확인하기 위한 초안이며 공개되지 않습니다. 기술 글과 논문 노트는 직접 작성해 채워 나가세요.
 
 ## GitHub Pages 배포
 

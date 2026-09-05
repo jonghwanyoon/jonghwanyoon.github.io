@@ -4,18 +4,22 @@ import PostCard from '../components/PostCard.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Icon from '../components/Icon.astro';
 import { getPosts } from '../lib/posts';
+import { SITE_DESCRIPTION } from '../consts';
 const posts = await getPosts();
 ---
 <BaseLayout>
-  <section class="hero shell">
-    <div class="hero-heading"><p class="eyebrow"><span class="status-dot"></span> NOTES ON TECH & RESEARCH</p><h1>배우고, 연결하고,<br/><span>기록합니다.</span></h1></div>
-    <div class="hero-note"><span class="hero-index">01 / ALWAYS LEARNING</span><p>기술을 깊이 이해하는 과정,<br/>{' '}논문 한 편에서 시작되는 생각.<br/>{' '}배운 것을 내 언어로 남기는 공간입니다.</p><a href="/about/">조금 더 알아보기 <Icon name="arrow" size={17}/></a></div>
-  </section>
   <div class="home-content shell">
     <section class="latest-section" aria-labelledby="latest-title">
-      <div class="section-heading"><div><span class="eyebrow">THE LATEST</span><h2 id="latest-title">최근 기록<span class="heading-count">{String(posts.length).padStart(2, '0')}</span></h2></div><a class="text-link" href="/blog/">모든 글 보기 <Icon name="right" size={17}/></a></div>
-      {posts.length ? <div class="post-list home-posts">{posts.slice(0, 5).map((post, index) => <PostCard post={post} featured={posts.length === 1 && index === 0}/>)}</div> : <div class="empty-state"><h3>첫 기록을 준비하고 있습니다.</h3><p>곧 새로운 배움을 이곳에서 나눕니다.</p></div>}
-      <div class="continue-note"><span class="tiny-cross">+</span><span>작은 이해가 모여, 더 넓은 시야가 되도록.</span><span class="tiny-line"></span></div>
+      <p class="home-description">{SITE_DESCRIPTION}</p>
+      <div class="section-heading">
+        <h1 id="latest-title">최근 글</h1>
+        <a class="text-link" href="/blog/">전체 글 <Icon name="right" size={17}/></a>
+      </div>
+      {posts.length ? (
+        <div class="post-list">{posts.slice(0, 5).map(post => <PostCard post={post}/>)}</div>
+      ) : (
+        <div class="empty-state"><p>아직 작성한 글이 없습니다.</p></div>
+      )}
     </section>
     <Sidebar/>
   </div>

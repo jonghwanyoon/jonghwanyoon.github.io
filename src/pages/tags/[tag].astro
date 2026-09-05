@@ -8,5 +8,5 @@ export async function getStaticPaths() { const posts = await getPosts(); return 
 const { posts, tag } = Astro.props;
 ---
 <BaseLayout title={`#${tag}`} description={`${tag} 주제의 기록을 모았습니다.`}>
-  <div class="shell"><header class="page-heading"><p class="eyebrow">TOPIC INDEX</p><h1><span class="blue-dot">#</span>{tag}</h1><p>하나의 주제로 연결된 기록들.</p></header><div class="archive-layout"><section aria-label="태그별 글 목록"><div class="list-caption"><span>{posts.length}개의 기록</span><a href="/blog/">전체 글 보기 →</a></div><div class="post-list">{posts.map(post => <PostCard post={post}/>)}</div></section><Sidebar/></div></div>
+  <div class="shell"><header class="page-heading"><h1><span class="blue-dot">#</span>{tag}</h1></header><div class="archive-layout"><section aria-label="태그별 글 목록"><div class="list-caption"><span>{posts.length}개의 기록</span><a href="/blog/">전체 글 보기 →</a></div><div class="post-list">{posts.map(post => <PostCard post={post}/>)}</div></section><Sidebar/></div></div>
 </BaseLayout>
